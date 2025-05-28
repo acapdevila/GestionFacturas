@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using ClosedXML.Extensions;
 using GestionFacturas.AccesoDatosSql;
 using GestionFacturas.Dominio.Infra;
-using Ionic.Zip;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 
 namespace GestionFacturas.Web.Pages.Facturas
 {
@@ -61,7 +61,7 @@ namespace GestionFacturas.Web.Pages.Facturas
         {
             var archivoZip = new MemoryStream();
 
-            using (var zip = new ZipFile())
+            using (var zip = new ZipArchive(archivoZip, ZipArchiveMode.Create, true))
             {
                 foreach (var itemFactura in listaGestionFacturas)
                 {
@@ -72,15 +72,23 @@ namespace GestionFacturas.Web.Pages.Facturas
                     var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, _env.WebRootPath);
 
                     byte[] pdf = informeLocal.Render("PDF");
-                    var nombrePdf = factura.NumeroYEmpresaFactura().Replace(":", " ").Replace("·", "").Replace("€", "").Replace("/", "-").EliminarDiacriticos() + ".pdf";
-                    zip.AddEntry(nombrePdf, pdf);
+                    var nombrePdf = factura.NumeroYEmpresaFactura()
+                        .Replace(":", " ")
+                        .Replace("·", "")
+                        .Replace("€", "")
+                        .Replace("/", "-")
+                        .EliminarDiacriticos() + ".pdf";
+
+                    var entry = zip.CreateEntry(nombrePdf, CompressionLevel.Optimal);
+                    using (var entryStream = entry.Open())
+                    {
+                        await entryStream.WriteAsync(pdf, 0, pdf.Length);
+                    }
                 }
-                zip.Save(archivoZip);
             }
 
+            archivoZip.Position = 0;
             return archivoZip;
-
-
         }
 
         public async Task<ActionResult> DescargarExcel(GridParamsFacturas gridParams)
