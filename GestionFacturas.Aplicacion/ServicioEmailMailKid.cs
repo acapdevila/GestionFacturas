@@ -3,9 +3,9 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.IO;
-using System;
 using GestionFacturas.Dominio.Infra;
 using Smtp;
+
 
 namespace GestionFacturas.Aplicacion
 {
