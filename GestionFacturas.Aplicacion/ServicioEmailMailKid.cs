@@ -4,6 +4,8 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.IO;
 using System;
+using GestionFacturas.Dominio.Infra;
+using Smtp;
 
 namespace GestionFacturas.Aplicacion
 {
@@ -47,8 +49,6 @@ namespace GestionFacturas.Aplicacion
 
         public void EnviarMensaje(MensajeEmail mensaje)
         {
-            Validar(mensaje);
-
             var email = GenerarEmail(mensaje);
                     
             Enviar(email);
@@ -56,8 +56,6 @@ namespace GestionFacturas.Aplicacion
 
         public async Task EnviarMensajeAsync(MensajeEmail mensaje)
         {
-            Validar(mensaje);
-
             var email = GenerarEmail(mensaje);
             
             await EnviarAsync(email);
@@ -65,49 +63,15 @@ namespace GestionFacturas.Aplicacion
 
         private MimeMessage GenerarEmail(MensajeEmail mensaje)
         {
-            var email = new MimeMessage();
-            
-            email.From.Add(  new MailboxAddress(mensaje.NombreRemitente, _mailSettings.From));
-            foreach (var destinatario in mensaje.DireccionesDestinatarios())
-            {
-                email.To.Add(MailboxAddress.Parse(destinatario));
-            }
-            email.ReplyTo.Add(MailboxAddress.Parse(mensaje.DireccionRemitente));
-            email.Subject = mensaje.Asunto;
+            var direccionEnvio = DireccionEmail.Crear(
+                mensaje.Remitente.Nombre,
+                mensaje.Remitente.Email);
 
-            email.Sender = MailboxAddress.Parse(_mailSettings.UserName); 
-            email.Sender.Name = mensaje.NombreRemitente;
-            
-            var builder = new BodyBuilder();
-            
-            if (mensaje.Adjuntos.Any())
-            {
-                byte[] fileBytes;
-                foreach (var file in mensaje.Adjuntos)
-                {
-                    if (file.Archivo.Length > 0)
-                    {
-                        fileBytes = file.Archivo.ToArray();
-                        builder.Attachments.Add(file.Nombre, fileBytes, ContentType.Parse(file.MimeType));
-                    }
-                }
-            }
-
-            builder.TextBody = mensaje.Cuerpo;
-            //builder.HtmlBody = mensaje.Cuerpo;
-            email.Body = builder.ToMessageBody();
+            var email = mensaje.ToMimeMessage(direccionEnvio);
             return email;
         }
         
 
-        private void Validar(MensajeEmail mensaje)
-        {
-            if (string.IsNullOrEmpty(mensaje.DireccionRemitente))
-                throw new ArgumentException("No se ha indicado el remitente", "DireccionRemitente");
-
-            if (!mensaje.DireccionesDestinatarios().Any())
-                throw new ArgumentException("No se ha indicado ningún destinatario", "DireccionesDestinatarios");
-        }
 
 
         private void Enviar(MimeMessage email)

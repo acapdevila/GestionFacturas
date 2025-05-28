@@ -5,6 +5,7 @@ using System.Net;
 using CSharpFunctionalExtensions;
 using GestionFacturas.AccesoDatosSql;
 using GestionFacturas.Dominio;
+using GestionFacturas.Dominio.Infra;
 using GestionFacturas.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -116,59 +117,57 @@ namespace GestionFacturas.Web.Pages.Facturas
             var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, _env.WebRootPath);
 
             byte[] pdf = informeLocal.Render("PDF");
-            
-            var mensaje = new MensajeEmail(
-                nombreRemitente: editorEmail.DisplayName, 
-                direccionRemitente: editorEmail.Remitente,
-                asunto: editorEmail.Asunto,
-                cuerpo: editorEmail.ContenidoHtml
-                )
+
+            var destinatarios = editorEmail.Destinatarios
+                .Split(new[] { ';' },
+                    StringSplitOptions.RemoveEmptyEntries |
+                    StringSplitOptions.TrimEntries)
+                .Select(m => DireccionEmail.Crear(m, m)).ToList();
+
+
+            var adjuntos = new List<ArchivoAdjunto>
             {
-                Adjuntos = new List<ArchivoAdjunto> {
-                    new ()
-                    {
-                        Archivo = pdf,
-                        MimeType = "application/pdf",
-                        Nombre = factura.NumeroYEmpresaFactura() + ".pdf"
-                    }
+                new()
+                {
+                    Archivo = pdf,
+                    MimeType = "application/pdf",
+                    Nombre = factura.NumeroYEmpresaFactura() + ".pdf"
                 }
             };
 
             if (editorEmail.ArchivosAdjuntos != null)
                 foreach (var archivo in editorEmail.ArchivosAdjuntos)
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        archivo.CopyTo(memoryStream);
+                    using var memoryStream = new MemoryStream();
+                    archivo.CopyTo(memoryStream);
 
-                        // Upload the file if less than 2 MB
-                        if (memoryStream.Length < 2097152)
+                    // Upload the file if less than 2 MB
+                    if (memoryStream.Length < 2097152)
+                    {
+                        adjuntos.Add(new ArchivoAdjunto
                         {
-                            mensaje.Adjuntos.Add(new ArchivoAdjunto
-                            {
-                                Archivo = memoryStream.ToArray(),
-                                MimeType = archivo.ContentType,
-                                Nombre = archivo.FileName
-                            });
-                        }
-                        else
-                        {
-                            return Result.Failure<MensajeEmail>("Los archivos adjuntos tienen un máximo de 2Mb");
-                        }
+                            Archivo = memoryStream.ToArray(),
+                            MimeType = archivo.ContentType,
+                            Nombre = archivo.FileName
+                        });
+                    }
+                    else
+                    {
+                        return Result.Failure<MensajeEmail>("Los archivos adjuntos tienen un máximo de 2Mb");
                     }
                 }
 
-            var validacionDestinatarios = 
-                            mensaje.AñadirDestinatarios(
-                                       editorEmail.Destinatarios
-                                           .Split(new[] { ';' },
-                                               StringSplitOptions.RemoveEmptyEntries | 
-                                                      StringSplitOptions.TrimEntries )
-                                           .ToList());
 
+            var mensaje = MensajeEmail.Crear(
+                editorEmail.Asunto,
+                editorEmail.ContenidoHtml,
+                destinatarios,
+                DireccionEmail.Crear(
+                    editorEmail.DisplayName,
+                    Email.FromString(editorEmail.Remitente).Value),
+                adjuntos
+            ).Value;
 
-            if (validacionDestinatarios.IsFailure) 
-                return validacionDestinatarios.ConvertFailure<MensajeEmail>();
 
             return mensaje;
         }
