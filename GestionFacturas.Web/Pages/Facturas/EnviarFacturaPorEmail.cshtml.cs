@@ -59,7 +59,7 @@ namespace GestionFacturas.Web.Pages.Facturas
             EditorEmail = new EditorEmail
             {
                 Remitente = factura.VendedorEmail ?? string.Empty,
-                Asunto = $"Factura {factura.NumeroFactura}",
+                Asunto = $"Factura {factura.NumeroFactura} Bahía Code",
                 ContenidoHtml = @"Hola,",
                 Destinatarios = factura.CompradorEmail ?? string.Empty,
                 DisplayName = factura.VendedorNombreOEmpresa
