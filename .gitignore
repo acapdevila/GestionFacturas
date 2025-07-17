@@ -48,3 +48,4 @@ GestionFacturas.Website/Properties/PublishProfiles/*
 /GestionFacturas.Web/Properties/ServiceDependencies/gestionfacturasbuclenet-test - Web Deploy/profile.arm.json
 /GestionFacturas.Web/wwwroot/Informes/Factura?*.rdlc
 /GestionFacturas.Web/Properties/ServiceDependencies/gestionfacturasbuclenet - Web Deploy/profile.arm.json
+/GestionFacturas.Web/Properties/ServiceDependencies/**/profile.arm.json

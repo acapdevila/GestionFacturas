@@ -46,7 +46,7 @@ namespace GestionFacturas.Web.Pages.Facturas
                 HrefCancelar = Url.Page(ListaGestionFacturasModel.NombrePagina)!;
             }
 
-            Editor.IdUsuario = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Editor.IdUsuario = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             return Page();
         }

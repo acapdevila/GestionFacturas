@@ -14,7 +14,7 @@ namespace GestionFacturas.Web.Framework
                 .Build();
 
 
-            return new SqlDb(configuration.GetConnectionString("ConnectionString"));
+            return new SqlDb(configuration.GetConnectionString("ConnectionString")!);
         }
     }
 }

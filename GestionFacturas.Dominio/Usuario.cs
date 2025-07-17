@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using GestionFacturas.Dominio.Infra;
+using GestionFacturas.Dominio.Seguridad;
 
 namespace GestionFacturas.Dominio
 {
@@ -12,19 +12,28 @@ namespace GestionFacturas.Dominio
 
         }
 
-        private Usuario(string id, string email, string password) : base(id)
-        {
-            Email = email;
-            Password = PasswordHasher.HashPassword(password);
-        }
 
         public string Email { get; private set; } = string.Empty;
 
         public string Password { get; private set; } = string.Empty;
 
-        public bool EsPasswordCorrecto(string password)
+        public bool EsPasswordCorrecto(string providedPassword)
         {
-            return PasswordHasher.VerifyHashedPassword(Password, password);
+            var posiblePassword = Seguridad.Password.Crear(providedPassword);
+
+            if(posiblePassword.IsFailure)
+            {
+                return false;
+            }
+
+            var verificacion = posiblePassword.Value.VerificarPassword(providedPassword);
+
+           return verificacion.IsSuccess;
+        }
+
+        public void CambiarPassword(Password password)
+        {
+            Password = password.PasswordHash;
         }
     }
     

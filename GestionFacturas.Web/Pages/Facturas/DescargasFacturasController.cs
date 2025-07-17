@@ -6,6 +6,7 @@ using GestionFacturas.AccesoDatosSql;
 using GestionFacturas.Dominio.Infra;
 using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace GestionFacturas.Web.Pages.Facturas
 {
@@ -22,6 +23,10 @@ namespace GestionFacturas.Web.Pages.Facturas
 
         public async Task<ActionResult> DescargarZip(GridParamsFacturas gridParams)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
             var facturas =
                 await _db.Facturas
                     .AsNoTracking()
@@ -52,7 +57,7 @@ namespace GestionFacturas.Web.Pages.Facturas
             var nombreArchivoZip = $"Facturas_desde_{gridParams.Desde}_hasta_{gridParams.Hasta}.zip";
 
             archivoZip.Position = 0;
-            HttpContext.Response.Headers.Add("content-disposition", "attachment; filename=" + nombreArchivoZip);
+            HttpContext.Response.Headers.Append("content-disposition", "attachment; filename=" + nombreArchivoZip);
             return File(archivoZip, "application/zip");
 
         }
@@ -93,6 +98,9 @@ namespace GestionFacturas.Web.Pages.Facturas
 
         public async Task<ActionResult> DescargarExcel(GridParamsFacturas gridParams)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var facturas =
                 await _db.Facturas
                 .AsNoTracking()
@@ -128,6 +136,11 @@ namespace GestionFacturas.Web.Pages.Facturas
 
         public async Task<ActionResult> Descargar(int id)
         {
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
             var factura = await _db.Facturas
                 .Include(m => m.Lineas)
                 .FirstAsync(m => m.Id == id);
@@ -145,7 +158,7 @@ namespace GestionFacturas.Web.Pages.Facturas
                 Inline = false,
             };
 
-            HttpContext.Response.Headers.Add("Content-Disposition", cabecera.ToString());
+            HttpContext.Response.Headers.Append("Content-Disposition", cabecera.ToString());
 
             return File(pdf, "application/pdf");
             

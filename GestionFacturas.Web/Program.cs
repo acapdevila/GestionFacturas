@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using GestionFacturas.AccesoDatosSql.Repos;
 using System.Globalization;
+using GestionFacturas.Web.Framework;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ builder.Services.AddAuthorization(options =>
 });
 var connectionString = builder.Configuration.GetConnectionString("ConnectionString");
 builder.Services.AddScoped(m=> 
-    new SqlDb(connectionString));
+    new SqlDb(connectionString!));
 
 
 // Add services to the container.
@@ -56,6 +57,7 @@ builder.Services.AddScoped<CambiarEstadoFacturaRepo>();
 
 
 var app = builder.Build();
+app.SincronizarBaseDatos();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -68,4 +70,4 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapDefaultControllerRoute();
 
-app.Run();
+await app.RunAsync();
