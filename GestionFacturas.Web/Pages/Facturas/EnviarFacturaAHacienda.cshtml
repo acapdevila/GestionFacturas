@@ -1,0 +1,63 @@
+﻿@page "{id}"
+@model EnviarFacturaAHaciendaModel
+
+@{
+    ViewBag.Title = "Enviar factura a hacienda";
+}
+
+<div class="container">
+    <h2>Enviar factura a hacienda @Model.NumeroFactura</h2>
+    <form method="post" enctype="multipart/form-data">
+        
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        
+        
+
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Mostrar detalles de la factura: estado, cliente y total -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Estado:</strong> @Model.EstadoFactura
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Cliente:</strong> @Model.Cliente
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Total:</strong> @Model.Total
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.NumeroFactura)
+        @Html.HiddenFor(m => m.EstadoFactura)
+        @Html.HiddenFor(m => m.Cliente)
+        @Html.HiddenFor(m => m.Total)
+
+
+        <p>
+            <div class="col-md-12">
+
+                <input type="submit" value="Enviar" class="btn btn-primary"/>
+
+                <a asp-page="@DetallesFacturaModel.NombrePagina" asp-route-id="@Model.Id" class="btn btn-primary">Detalles</a>
+                <a asp-page="@ListaGestionFacturasModel.NombrePagina" class="btn btn-link">Volver a la lista de facturas</a>
+
+            </div>
+        </p>
+
+    </form>
+    <br/><br/>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

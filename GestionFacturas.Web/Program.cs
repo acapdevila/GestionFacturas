@@ -52,6 +52,7 @@ var mailSettings = new MailSettings();
 builder.Configuration.GetSection("MailSettings").Bind(mailSettings);
 builder.Services.AddSingleton(mailSettings);
 builder.Services.AddScoped<IServicioEmail, ServicioEmailMailKid>();
+builder.Services.AddScoped<IVerifactuServicio, VerifactuIreneSolutionsServicio>();
 builder.Services.AddScoped<CambiarEstadoFacturaServicio>();
 builder.Services.AddScoped<CambiarEstadoFacturaRepo>();
 
