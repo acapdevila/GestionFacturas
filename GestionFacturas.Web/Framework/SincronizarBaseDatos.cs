@@ -13,7 +13,7 @@ namespace GestionFacturas.Web.Framework
             try
             {
                 var context = services.GetRequiredService<SqlDb>();
-                //DbInitializer.EjecutarMigracionesPendientesYSincronizarTablas(context);
+                DbInitializer.EjecutarMigracionesPendientesYSincronizarTablas(context);
                 DbInitializer.SincronizarTablas(context);
 
                 return host;

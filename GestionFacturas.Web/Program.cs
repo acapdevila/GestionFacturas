@@ -56,9 +56,12 @@ builder.Services.AddScoped<IVerifactuServicio, VerifactuIreneSolutionsServicio>(
 builder.Services.AddScoped<CambiarEstadoFacturaServicio>();
 builder.Services.AddScoped<CambiarEstadoFacturaRepo>();
 
+var ireneSolutionsApiKey = builder.Configuration["Verifactu:IreneSolutionsApiKey"] ?? string.Empty;
+
 
 var app = builder.Build();
 app.SincronizarBaseDatos();
+VerifactuIreneSolutionsServicio.Inicializar(ireneSolutionsApiKey);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

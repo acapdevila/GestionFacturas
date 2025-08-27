@@ -8,7 +8,7 @@ namespace GestionFacturas.AccesoDatosSql
     {
         private readonly string _connectionString;
 
-        public const string Esquema = "GestionFacturas";
+        public const string EsquemaTablas = "GestionFacturas";
 
         //public SqlDb()
         //{
@@ -32,7 +32,8 @@ namespace GestionFacturas.AccesoDatosSql
         {
 
             optionsBuilder
-                .UseSqlServer(_connectionString)
+                .UseSqlServer(_connectionString,
+                    x => x.MigrationsHistoryTable("__EFGestionFacturasMigrationsHistory", EsquemaTablas))
                 .UseLazyLoadingProxies();
                     
             

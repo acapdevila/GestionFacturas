@@ -9,7 +9,7 @@ namespace GestionFacturas.AccesoDatosSql.Tablas
     {
         public void Configure(EntityTypeBuilder<Cliente> entity)
         {
-            entity.ToTable("Clientes", SqlDb.Esquema);
+            entity.ToTable("Clientes", SqlDb.EsquemaTablas);
 
             entity.Property(e => e.CodigoPostal).HasMaxLength(10);
 

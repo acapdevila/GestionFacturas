@@ -36,7 +36,7 @@ namespace GestionFacturas.AccesoDatosSql
         {
             using var transaction = context.Database.BeginTransaction();
 
-            context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {SqlDb.Esquema}.{nombreTabla} ON");
+            context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {SqlDb.EsquemaTablas}.{nombreTabla} ON");
             
             foreach (var entidad in entidades)
             {
@@ -44,7 +44,7 @@ namespace GestionFacturas.AccesoDatosSql
             }
 
             context.SaveChanges();
-            context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {SqlDb.Esquema}.{nombreTabla} OFF");
+            context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {SqlDb.EsquemaTablas}.{nombreTabla} OFF");
             transaction.Commit();
           
         }

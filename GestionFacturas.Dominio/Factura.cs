@@ -1,5 +1,6 @@
 ﻿using GestionFacturas.Dominio.Clientes;
 using System.ComponentModel.DataAnnotations;
+using CSharpFunctionalExtensions;
 
 namespace GestionFacturas.Dominio
 {
@@ -69,6 +70,10 @@ namespace GestionFacturas.Dominio
 
         public string NombreArchivoPlantillaInforme { get; set; } = string.Empty;
 
+        public string? VerifactuCsv { get; set; }
+
+        public bool EnviadaAHacienda { get; set;  }
+        
         public string NumeroYEmpresaFactura() =>string.Format("Factura {0} {1}", NumeroFactura, CompradorNombreOEmpresa);
            
 
@@ -97,5 +102,20 @@ namespace GestionFacturas.Dominio
         }
 
         public virtual Cliente Comprador { get; set; } = new();
+
+        public Result MarcarFacturaComoEnviadaAHacienda()
+        {
+            if(EnviadaAHacienda)
+                return Result.Failure("Ya se ha enviado a hacienda previamente");
+            
+            this.EnviadaAHacienda = true;
+
+            return Result.Success();
+        }
+
+        public void GuardarCsvDevueltoPorHacienda(string csv)
+        {
+            this.VerifactuCsv = csv;
+        }
     }
 }

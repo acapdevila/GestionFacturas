@@ -9,7 +9,7 @@ namespace GestionFacturas.AccesoDatosSql.Tablas
     {
         public void Configure(EntityTypeBuilder<Factura> entity)
         {
-            entity.ToTable("Facturas", SqlDb.Esquema);
+            entity.ToTable("Facturas", SqlDb.EsquemaTablas);
 
             entity.HasIndex(e => e.IdComprador, "IX_IdComprador");
 
@@ -68,6 +68,10 @@ namespace GestionFacturas.AccesoDatosSql.Tablas
             entity.Property(e => e.VendedorNumeroIdentificacionFiscal).HasMaxLength(50);
 
             entity.Property(e => e.VendedorProvincia).HasMaxLength(50);
+
+            entity.Property(e => e.VerifactuCsv).HasMaxLength(128);
+
+            entity.Property(e => e.EnviadaAHacienda).HasDefaultValue(false);
 
             entity.HasOne(m => m.Usuario)
                 .WithMany()

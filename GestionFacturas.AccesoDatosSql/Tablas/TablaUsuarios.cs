@@ -10,7 +10,7 @@ namespace GestionFacturas.AccesoDatosSql.Tablas
 
         public void Configure(EntityTypeBuilder<Usuario> entity)
         {
-            entity.ToTable("AspNetUsers",SqlDb.Esquema);
+            entity.ToTable("AspNetUsers",SqlDb.EsquemaTablas);
             entity.Property(e => e.Email);
 
             entity.Property(e => e.Password).HasColumnName("PasswordHash");

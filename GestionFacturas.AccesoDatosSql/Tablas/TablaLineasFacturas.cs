@@ -8,7 +8,7 @@ public class TablaLineasFacturas : IEntityTypeConfiguration<LineaFactura>
 {
     public void Configure(EntityTypeBuilder<LineaFactura> entity)
     {
-        entity.ToTable("FacturasLineas",SqlDb.Esquema);
+        entity.ToTable("FacturasLineas",SqlDb.EsquemaTablas);
 
         entity.HasIndex(e => e.IdFactura, "IX_IdFactura");
 

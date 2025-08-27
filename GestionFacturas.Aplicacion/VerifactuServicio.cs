@@ -28,14 +28,24 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
         _db = db;
     }
 
+    public static void Inicializar(string serviceApiKey)
+    {
+        Settings.Current.Api.ServiceKey = serviceApiKey;
+        Settings.Save();
+    }
+
     public async Task<Result> EnviarAltaFacturaAsync(int facturaId)
     {
-        GuardarApiKey();
-        
         var factura = await BuscarFactura(facturaId);
 
         if (factura is null)
             return Result.Failure($"Factura no encontrada. Id: {factura}");
+
+        var marcado = factura.MarcarFacturaComoEnviadaAHacienda();
+
+        if (marcado.IsFailure)
+            return marcado;
+
 
         var invoice = ToIreneSolutionsInvoice(factura); 
 
@@ -51,8 +61,8 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
         if (string.IsNullOrEmpty(csv))
             return Result.Failure($"El envío no se ha realizado con éxito: {result.Return.ErrorDescription}");
 
-        // Guardar el CSV en la base de datos
-        // factura.CodigoSeguridad = csv;
+
+        factura.GuardarCsvDevueltoPorHacienda(csv);
 
         await _db.SaveChangesAsync();
 
@@ -60,16 +70,10 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
 
     }
 
-    private static void  GuardarApiKey()
-    {
-        Settings.Current.Api.ServiceKey = "My_ServiceKey";
-        Settings.Save();
-    }
 
     public async Task<Result<MemoryStream>> ObtenerQr(int facturaId)
     {
-        GuardarApiKey();
-
+        
         var factura = await BuscarFactura(facturaId);
 
         if (factura is null)
@@ -91,8 +95,7 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
 
     public async Task<Result> EnviarAnulacionFacturaAsync(int facturaId)
     {
-        GuardarApiKey();
-
+        
         var factura = await BuscarFactura(facturaId);
 
         if (factura is null)
