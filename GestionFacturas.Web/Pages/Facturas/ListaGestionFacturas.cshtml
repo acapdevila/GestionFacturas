@@ -255,7 +255,7 @@
         function obtenerCssClasePorEstadoFactura(estadoFactura) {
             if (estadoFactura === 1) {
                 return "default";
-            } else if (estadoFactura === 2) {
+            } else if (estadoFactura === 2 || estadoFactura === 6) {
                 return "warning";
             } else if (estadoFactura === 3) {
                 return "success";
@@ -277,6 +277,9 @@
                 return "@EstadoFacturaEnum.Cobrada";
             } else if (estadoFactura === 4) {
                 return "@EstadoFacturaEnum.Impagada";
+            }
+            else if (estadoFactura === 6) {
+                return "@EstadoFacturaEnum.EnviadaAHacienda";
             }
             else if (estadoFactura === 5) {
                 return "@Html.Raw(EstadoFacturaEnum.Rectificación.ToString())";

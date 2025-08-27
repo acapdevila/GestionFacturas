@@ -12,6 +12,13 @@
 </div>
 <p>
     <a asp-page="@EditarFacturaModel.NombrePagina" asp-route-id="@Model.Factura.Id" class="btn btn-primary">Editar</a>
+    
+    @if (Model.MostrarBotonEnviarAHacienda)
+    {
+            <a asp-page="@EnviarFacturaAHaciendaModel.NombrePagina" asp-route-id="@Model.Factura.Id" class="btn btn-primary">Enviar a hacienda</a>
+
+    }
+    
     <a asp-page="@EnviarFacturaPorEmailModel.NombrePagina" asp-route-id="@Model.Factura.Id" class="btn btn-primary">Enviar por e-mail</a>
     <a asp-controller="DescargasFacturas" asp-action="Descargar" asp-route-id="@Model.Factura.Id" class="btn btn-primary">Descargar</a>
     <a asp-page="@CrearFacturaModel.NombrePagina" asp-route-id="@Model.Factura.Id" class="btn btn-primary">Duplicar</a>

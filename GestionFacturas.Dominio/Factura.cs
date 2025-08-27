@@ -110,12 +110,22 @@ namespace GestionFacturas.Dominio
             
             this.EnviadaAHacienda = true;
 
+            if(EstadoFactura == EstadoFacturaEnum.Borrador)
+                this.EstadoFactura = EstadoFacturaEnum.EnviadaAHacienda;
+
             return Result.Success();
         }
 
         public void GuardarCsvDevueltoPorHacienda(string csv)
         {
             this.VerifactuCsv = csv;
+        }
+
+        public Factura CambiarEstado(EstadoFacturaEnum comandoEstado)
+        {
+            this.EstadoFactura = comandoEstado;
+            return this;
+
         }
     }
 }

@@ -4,6 +4,9 @@ using GestionFacturas.Dominio;
 
 namespace GestionFacturas.Aplicacion;
 
+
+public record CambiarEstadoFacturaComando(int Id, EstadoFacturaEnum Estado);
+
 public class CambiarEstadoFacturaServicio
 {
     private readonly CambiarEstadoFacturaRepo _db;
@@ -17,14 +20,8 @@ public class CambiarEstadoFacturaServicio
     {
         var posibleFactura = await _db.GetById(comando.Id);
         
-        var cambioEstado = 
-                    posibleFactura
-        
-                        .ToResult("Factura no encontrada")
-                            //.Map(facturaDb =>
-                            //    new CambiarEstadoFactura.Factura(facturaDb.Id, facturaDb.Estado))
-
-                        .Bind(factura =>
+        var cambioEstado = posibleFactura.ToResult("Factura no encontrada")
+                           .Map(factura =>
                               factura.CambiarEstado(comando.Estado));
 
 

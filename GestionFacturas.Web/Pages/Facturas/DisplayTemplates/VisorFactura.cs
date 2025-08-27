@@ -50,6 +50,10 @@ public class VisorFactura
         ImporteTotal = factura.ImporteTotal();
 
         Lineas = factura.Lineas.Select(m => new LineaVisorFactura(m)).ToList();
+
+        EnviadaAHacienda = factura.EnviadaAHacienda;
+
+        VerifactuCsv = factura.VerifactuCsv ?? string.Empty;
     }
 
     public int Id { get; set; }
@@ -95,5 +99,9 @@ public class VisorFactura
     public decimal ImporteImpuestos { get; set; }
 
     public decimal ImporteTotal { get; set; }
-        
+
+    public bool EnviadaAHacienda { get; set; }
+
+    public string VerifactuCsv { get; set; } = string.Empty;
+
 }

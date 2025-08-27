@@ -13,27 +13,20 @@ namespace GestionFacturas.AccesoDatosSql.Repos
             _db = db;
         }
 
-        public async Task<Maybe<CambiarEstadoFactura.Factura>> GetById(int id)
+        public async Task<Maybe<Factura>> GetById(int id)
         {
-            var select = await _db.Facturas
-                .Select(m => new
-                {
-                    m.Id,
-                    m.EstadoFactura
-                }).FirstOrDefaultAsync(m => m.Id == id);
-
-
-            if (select is null) return Maybe.None;
-
-
-            return new CambiarEstadoFactura.Factura(select.Id, select.EstadoFactura);
+            var factura = await _db.Facturas.FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (factura is null) return Maybe.None;
+            
+            return factura;
 
         }
 
-        public async Task Update(CambiarEstadoFactura.Factura entity)
+        public async Task Update(Factura entity)
         {
             await _db.Database.ExecuteSqlInterpolatedAsync(
-                    $"UPDATE GestionFacturas.Facturas SET EstadoFactura={entity.Estado} WHERE Id={entity.Id}");
+                    $"UPDATE GestionFacturas.Facturas SET EstadoFactura={entity.EstadoFactura} WHERE Id={entity.Id}");
             
       
         }

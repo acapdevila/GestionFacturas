@@ -133,6 +133,14 @@
                            Nota: @Html.DisplayFor(m => m.ComentarioInterno)
                         </p>
                     }
+                    
+                    @if (Model.EnviadaAHacienda)
+                    {
+                        <p>
+                            Factura enviada a Hacienda. CSV: @Model.VerifactuCsv
+                        </p>
+                    }
+
                 </div>
             </div>
         </div>

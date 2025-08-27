@@ -20,7 +20,9 @@ namespace GestionFacturas.Web.Pages.Facturas
       public VisorFactura Factura { get; set; } = default!;
    
 
-        public async Task<IActionResult> OnGetAsync(int id)
+      public bool MostrarBotonEnviarAHacienda { get; set; }
+
+      public async Task<IActionResult> OnGetAsync(int id)
         {
             var factura = 
                 await _db.Facturas
@@ -29,6 +31,9 @@ namespace GestionFacturas.Web.Pages.Facturas
                         .FirstAsync(m => m.Id == id);
             
             Factura = new VisorFactura(factura);
+
+            MostrarBotonEnviarAHacienda = !factura.EnviadaAHacienda;
+
             
             return Page();
 

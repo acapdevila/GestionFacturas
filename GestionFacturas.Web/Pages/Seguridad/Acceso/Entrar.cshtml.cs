@@ -41,7 +41,8 @@ namespace GestionFacturas.Web.Pages.Seguridad.Acceso
 
         public void OnGet()
         {
-            
+            // SIn implementación necesaria por ahora
+
         }
 
         public async Task<IActionResult> OnPostAsync()

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GestionFacturas.Aplicacion;
 using GestionFacturas.Dominio;
-using static GestionFacturas.Dominio.CambiarEstadoFactura;
 using EditorFactura = GestionFacturas.Web.Pages.Facturas.EditorTemplates.EditorFactura;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
