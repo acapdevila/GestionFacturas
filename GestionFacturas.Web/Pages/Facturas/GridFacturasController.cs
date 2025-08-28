@@ -76,19 +76,18 @@ namespace GestionFacturas.Web.Pages.Facturas
 
     public class GridParamsFacturas : GridParams
     {
-        public string Nif { get; set; } = string.Empty;
-        public string NombreOEmpresa { get; set; } = string.Empty;
+        public string? NombreOEmpresa { get; set; }
 
-        public DateTime DesdeFecha => Desde.FromInputToDateTime();
-        public string Desde { get; set; } = string.Empty;
+        public DateTime? DesdeFecha => Desde?.FromInputToDateTime();
+        public string? Desde { get; set; }
 
 
-        public DateTime HastaFecha => Hasta.FromInputToDateTime();
-        public string Hasta { get; set; } = string.Empty;
+        public DateTime? HastaFecha => Hasta?.FromInputToDateTime();
+        public string? Hasta { get; set; } = string.Empty;
         
         public OrdenFacturas Orden { get; set; }
 
-        public EstadoFacturaEnum EstadoFactura { get; set; }
+        public EstadoFacturaEnum? EstadoFactura { get; set; }
 
     }
 
@@ -100,19 +99,15 @@ namespace GestionFacturas.Web.Pages.Facturas
         {
             return consulta
                 .If(!string.IsNullOrEmpty(gridParams.NombreOEmpresa))
-                    .ThenWhere(m => m.CompradorNombreOEmpresa.Contains(gridParams.NombreOEmpresa))
-
-
-                .If(!string.IsNullOrEmpty(gridParams.Nif))
-                .ThenWhere(m => m.CompradorNumeroIdentificacionFiscal.Contains(gridParams.Nif))
-
+                    .ThenWhere(m => m.CompradorNombreOEmpresa.Contains(gridParams.NombreOEmpresa!))
+                    
                 .If(!string.IsNullOrEmpty(gridParams.Desde))
-                .ThenWhere(m => gridParams.DesdeFecha <= m.FechaEmisionFactura)
+                    .ThenWhere(m => gridParams.DesdeFecha! <= m.FechaEmisionFactura)
                 .If(!string.IsNullOrEmpty(gridParams.Hasta))
-                .ThenWhere(m => m.FechaEmisionFactura <= gridParams.HastaFecha)
+                    .ThenWhere(m => m.FechaEmisionFactura <= gridParams.HastaFecha!)
 
-                .If(0 < gridParams.EstadoFactura)
-                .ThenWhere(m => gridParams.EstadoFactura == m.EstadoFactura)
+                .If(gridParams.EstadoFactura is not null)
+                    .ThenWhere(m => gridParams.EstadoFactura! == m.EstadoFactura)
 
               ;
 
