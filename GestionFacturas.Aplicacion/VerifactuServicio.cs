@@ -74,7 +74,7 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
     public Result<MemoryStream> ObtenerQr(Factura factura)
     {
         if (!factura.EnviadaAHacienda)
-            return Result.Failure<MemoryStream>($"No es posible descargar una factura que no ha sido enviada a Hacienda. Factura: {factura.NumeroFactura}");
+            return new MemoryStream([]);
 
 
         var invoice = ToIreneSolutionsInvoice(factura);

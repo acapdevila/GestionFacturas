@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Extensions;
 using GestionFacturas.AccesoDatosSql;
-using GestionFacturas.Aplicacion;
 using GestionFacturas.Dominio;
 using GestionFacturas.Dominio.Infra;
 using GestionFacturas.Web.Framework.Grid;
