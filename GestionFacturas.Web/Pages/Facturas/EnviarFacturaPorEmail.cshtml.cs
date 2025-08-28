@@ -44,6 +44,12 @@ namespace GestionFacturas.Web.Pages.Facturas
         [BindProperty]
         public string NumeroFactura { get; set; } = string.Empty;
 
+        [BindProperty]
+        public bool MostrarCheckEnviarAHacienda { get; set; }
+
+        [BindProperty]
+        public bool EnviarAHacienda { get; set; }
+
         [BindProperty] public EditorEmail EditorEmail { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync()
@@ -62,6 +68,9 @@ namespace GestionFacturas.Web.Pages.Facturas
             Id = factura.Id;
 
             NumeroFactura = factura.NumeroFactura;
+
+            MostrarCheckEnviarAHacienda = !factura.EnviadaAHacienda;
+            EnviarAHacienda = MostrarCheckEnviarAHacienda;
 
             EditorEmail = new EditorEmail
             {
@@ -98,12 +107,25 @@ namespace GestionFacturas.Web.Pages.Facturas
             if (factura is null)
                 return NotFound();
 
+
+            if (EnviarAHacienda)
+            {
+                var envio = await _verifactu.EnviarAltaFacturaAsync(factura.Id);
+                if (envio.IsFailure)
+                {
+                    ModelState.AddModelError(string.Empty, envio.Error);
+                    CargarCombos();
+                    return Page();
+                }
+            }
+
+
             var qr = _verifactu.ObtenerQr(factura);
 
             if (qr.IsFailure)
                 return BadRequest(qr.Error);
 
-            var mensaje = GenerarMensajeEmail(EditorEmail,factura, qr.Value);
+            var mensaje = GenerarMensajeEmail(EditorEmail, factura, qr.Value);
 
             if (mensaje.IsFailure)
             {
