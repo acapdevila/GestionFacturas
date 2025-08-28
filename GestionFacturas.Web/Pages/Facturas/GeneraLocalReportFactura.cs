@@ -1,4 +1,5 @@
-﻿using GestionFacturas.Aplicacion;
+﻿using System.Drawing;
+using GestionFacturas.Aplicacion;
 using GestionFacturas.Dominio;
 using GestionFacturas.Dominio.Infra;
 using Microsoft.Reporting.NETCore;
@@ -8,7 +9,7 @@ namespace GestionFacturas.Web.Pages.Facturas
     public static class GeneraLocalReportFactura
     {
         
-        public static LocalReport GenerarInformeLocalFactura(Factura factura, string webRootPath)
+        public static LocalReport GenerarInformeLocalFactura(Factura factura, MemoryStream qr, string webRootPath)
         {
             var plantillaRdlc = string.IsNullOrEmpty(factura.NombreArchivoPlantillaInforme)
                                                     ? "Factura.rdlc"
@@ -22,21 +23,24 @@ namespace GestionFacturas.Web.Pages.Facturas
                 EnableExternalImages = true
             };
             
-            var datasetFactura = ConvertirADataSet(factura);
+            var datasetFactura = ConvertirADataSet(factura, qr);
 
             informeLocal.DataSources.Add(new ReportDataSource("Facturas", datasetFactura.Tables[0]));
             informeLocal.DataSources.Add(new ReportDataSource("Lineas", datasetFactura.Tables[1]));
 
+            
+
             return informeLocal;
         }
 
-        private static DataSetFactura ConvertirADataSet(Factura factura)
+        private static DataSetFactura ConvertirADataSet(Factura factura, MemoryStream qr)
         {
             var datasetFactura = new DataSetFactura();
             
             var filaDatasetFactura = datasetFactura.Facturas.NewFacturasRow();
 
             filaDatasetFactura.CopiarFactura(factura);
+            filaDatasetFactura.QrBytes = qr.ToArray();
 
             datasetFactura.Facturas.AddFacturasRow(filaDatasetFactura);
 

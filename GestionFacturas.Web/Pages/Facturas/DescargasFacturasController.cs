@@ -14,11 +14,13 @@ namespace GestionFacturas.Web.Pages.Facturas
     {
         private readonly SqlDb _db;
         private readonly IWebHostEnvironment _env;
+        private readonly IVerifactuServicio _verifactu;
 
-        public DescargasFacturasController(IWebHostEnvironment env, SqlDb db)
+        public DescargasFacturasController(IWebHostEnvironment env, SqlDb db, IVerifactuServicio verifactu)
         {
             _env = env;
             _db = db;
+            _verifactu = verifactu;
         }
 
         public async Task<ActionResult> DescargarZip(GridParamsFacturas gridParams)
@@ -74,7 +76,9 @@ namespace GestionFacturas.Web.Pages.Facturas
                         .Include(m => m.Lineas)
                         .FirstAsync(m => m.Id == itemFactura.Id);
 
-                    var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, _env.WebRootPath);
+                    var qr = _verifactu.ObtenerQr(factura);
+                    
+                    var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, qr.Value, _env.WebRootPath);
 
                     byte[] pdf = informeLocal.Render("PDF");
                     var nombrePdf = factura.NumeroYEmpresaFactura()
@@ -145,7 +149,12 @@ namespace GestionFacturas.Web.Pages.Facturas
                 .Include(m => m.Lineas)
                 .FirstAsync(m => m.Id == id);
 
-            var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, _env.WebRootPath);
+            var qr = _verifactu.ObtenerQr(factura);
+
+            if(qr.IsFailure)
+                return BadRequest(qr.Error);
+
+            var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, qr.Value, _env.WebRootPath);
             
             byte[] pdf = informeLocal.Render("PDF");
             var nombrePdf = factura.NumeroYEmpresaFactura().Replace(":", " ").Replace("·", "").Replace("€", "").Replace("/", "-").EliminarDiacriticos() + ".pdf";

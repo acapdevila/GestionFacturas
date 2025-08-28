@@ -44,22 +44,27 @@ namespace GestionFacturas.Web.Pages.Facturas
             {
                 return Page();
             }
+
+            var factura = await _db.Facturas
+                .Include(m => m.Lineas)
+                .FirstAsync(m => m.Id == Editor.Id);
+
+            var validacion = factura.ValidarEsPosibleModificar();
+
+            if (validacion.IsFailure)
+            {
+                ModelState.AddModelError(string.Empty, validacion.Error);
+                return Page();
+            }
+
+
+            EditorFactura.ModificarFactura(Editor, factura, _db);
             
-            await ActualizarFacturaAsync(Editor);
+            _db.Entry(factura).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
             return RedirectToPage(DetallesFacturaModel.NombrePagina, new { Editor.Id });
         }
 
-        public async Task<int> ActualizarFacturaAsync(EditorFactura editor)
-        {
-            var factura = await _db.Facturas
-                .Include(m => m.Lineas)
-                .FirstAsync(m => m.Id == editor.Id);
-
-            // Pendiente de refactorizar
-            EditorFactura.ModificarFactura(editor, factura, _db);
-
-            _db.Entry(factura).State = EntityState.Modified;
-            return await _db.SaveChangesAsync();
-        }
     }
 }

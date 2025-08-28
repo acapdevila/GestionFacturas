@@ -15,7 +15,7 @@ public interface IVerifactuServicio
     Task<Result> EnviarAltaFacturaAsync(int facturaId);
     Task<Result> EnviarAnulacionFacturaAsync(int facturaId);
 
-    Task<Result<MemoryStream>> ObtenerQr(int facturaId);
+    Result<MemoryStream> ObtenerQr(Factura factura);
 }
 
 
@@ -49,17 +49,17 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
 
         var invoice = ToIreneSolutionsInvoice(factura); 
 
-        dynamic result = ApiClient.Create(invoice);
+        dynamic creacion = ApiClient.Create(invoice);
 
-        if (result.ResultCode != 0)
+        if (creacion.ResultCode != 0)
         {
-            return Result.Failure($"Se ha producido un error al llamar al API: {result.ResultMessage}");
+            return Result.Failure($"Se ha producido un error al llamar al API: {creacion.ResultMessage}");
         }
-        
-        var csv = $"{result.Return.CSV}";
+
+        var csv = $"{creacion.Return.CSV}";
 
         if (string.IsNullOrEmpty(csv))
-            return Result.Failure($"El envío no se ha realizado con éxito: {result.Return.ErrorDescription}");
+            return Result.Failure($"El envío no se ha realizado con éxito: {creacion.Return.ErrorDescription}");
 
 
         factura.GuardarCsvDevueltoPorHacienda(csv);
@@ -71,14 +71,8 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
     }
 
 
-    public async Task<Result<MemoryStream>> ObtenerQr(int facturaId)
+    public Result<MemoryStream> ObtenerQr(Factura factura)
     {
-        
-        var factura = await BuscarFactura(facturaId);
-
-        if (factura is null)
-            return Result.Failure<MemoryStream>($"Factura no encontrada. Id: {factura}");
-
         var invoice = ToIreneSolutionsInvoice(factura);
 
         dynamic result = ApiClient.GetQr(invoice);
@@ -88,8 +82,8 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
             return Result.Failure<MemoryStream>($"Se ha producido un error al llamar al API: {result.ResultMessage}");
         }
 
-        var bitMapBytes = Convert.FromBase64String(result.Return);
-        return new MemoryStream(bitMapBytes);
+        return new MemoryStream(
+                        Convert.FromBase64String(result.Return));
     }
 
 

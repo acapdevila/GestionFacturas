@@ -963,6 +963,22 @@
             </Border>
           </Style>
         </Image>
+        <Image Name="ImagenQr">
+          <Source>Database</Source>
+          <Value>=First(Fields!QrBytes.Value, "Facturas")</Value>
+          <MIMEType>image/bmp</MIMEType>
+          <Sizing>FitProportional</Sizing>
+          <Top>0.3341cm</Top>
+          <Left>6.755cm</Left>
+          <Height>3cm</Height>
+          <Width>3cm</Width>
+          <ZIndex>11</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </Image>
       </ReportItems>
       <Style>
         <Border>
@@ -1137,6 +1153,10 @@
           <DataField>ImporteTotal</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+	      <Field Name="QrBytes">
+		      <DataField>QrBytes</DataField>
+		      <rd:TypeName>System.Byte[]</rd:TypeName>
+	      </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSetFactura</rd:DataSetName>

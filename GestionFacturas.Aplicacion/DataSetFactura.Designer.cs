@@ -45,6 +45,8 @@ namespace GestionFacturas.Aplicacion {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        [System.ObsoleteAttribute("This API supports obsolete formatter-based serialization. It should not be called" +
+            " or extended by application code.", DiagnosticId="SYSLIB0051")]
         protected DataSetFactura(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
@@ -369,6 +371,8 @@ namespace GestionFacturas.Aplicacion {
             
             private global::System.Data.DataColumn columnImporteTotal;
             
+            private global::System.Data.DataColumn columnQrBytes;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public FacturasDataTable() {
@@ -397,6 +401,8 @@ namespace GestionFacturas.Aplicacion {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [System.ObsoleteAttribute("This API supports obsolete formatter-based serialization. It should not be called" +
+                " or extended by application code.", DiagnosticId="SYSLIB0051")]
             protected FacturasDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
@@ -596,6 +602,14 @@ namespace GestionFacturas.Aplicacion {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn QrBytesColumn {
+                get {
+                    return this.columnQrBytes;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -654,7 +668,8 @@ namespace GestionFacturas.Aplicacion {
                         string FormaPagoDetalles, 
                         decimal BaseImponible, 
                         decimal ImporteImpuestos, 
-                        decimal ImporteTotal) {
+                        decimal ImporteTotal, 
+                        byte[] QrBytes) {
                 FacturasRow rowFacturasRow = ((FacturasRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -680,7 +695,8 @@ namespace GestionFacturas.Aplicacion {
                         FormaPagoDetalles,
                         BaseImponible,
                         ImporteImpuestos,
-                        ImporteTotal};
+                        ImporteTotal,
+                        QrBytes};
                 rowFacturasRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowFacturasRow);
                 return rowFacturasRow;
@@ -734,6 +750,7 @@ namespace GestionFacturas.Aplicacion {
                 this.columnBaseImponible = base.Columns["BaseImponible"];
                 this.columnImporteImpuestos = base.Columns["ImporteImpuestos"];
                 this.columnImporteTotal = base.Columns["ImporteTotal"];
+                this.columnQrBytes = base.Columns["QrBytes"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -787,6 +804,8 @@ namespace GestionFacturas.Aplicacion {
                 base.Columns.Add(this.columnImporteImpuestos);
                 this.columnImporteTotal = new global::System.Data.DataColumn("ImporteTotal", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnImporteTotal);
+                this.columnQrBytes = new global::System.Data.DataColumn("QrBytes", typeof(byte[]), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnQrBytes);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
                 this.columnId.AutoIncrement = true;
@@ -989,6 +1008,8 @@ namespace GestionFacturas.Aplicacion {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [System.ObsoleteAttribute("This API supports obsolete formatter-based serialization. It should not be called" +
+                " or extended by application code.", DiagnosticId="SYSLIB0051")]
             protected FacturasLineasDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
@@ -1672,6 +1693,22 @@ namespace GestionFacturas.Aplicacion {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public byte[] QrBytes {
+                get {
+                    try {
+                        return ((byte[])(this[this.tableFacturas.QrBytesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'QrBytes\' de la tabla \'Facturas\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableFacturas.QrBytesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsRutaLogoNull() {
                 return this.IsNull(this.tableFacturas.RutaLogoColumn);
             }
@@ -1920,6 +1957,18 @@ namespace GestionFacturas.Aplicacion {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetImporteTotalNull() {
                 this[this.tableFacturas.ImporteTotalColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsQrBytesNull() {
+                return this.IsNull(this.tableFacturas.QrBytesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetQrBytesNull() {
+                this[this.tableFacturas.QrBytesColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

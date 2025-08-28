@@ -21,14 +21,21 @@ namespace GestionFacturas.Web.Pages.Facturas
         private readonly SqlDb _db;
         private readonly MailSettings _mailSettings;
         private readonly IServicioEmail _email;
-        
+        private readonly IVerifactuServicio _verifactu;
 
-        public EnviarFacturaPorEmailModel(IWebHostEnvironment env, MailSettings mailSettings, SqlDb db, IServicioEmail email)
+
+        public EnviarFacturaPorEmailModel(
+            IWebHostEnvironment env, 
+            MailSettings mailSettings, 
+            SqlDb db, 
+            IServicioEmail email, 
+            IVerifactuServicio verifactu)
         {
             _env = env;
             _mailSettings = mailSettings;
             _db = db;
             _email = email;
+            _verifactu = verifactu;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -91,8 +98,12 @@ namespace GestionFacturas.Web.Pages.Facturas
             if (factura is null)
                 return NotFound();
 
-            
-            var mensaje = GenerarMensajeEmail(EditorEmail, factura);
+            var qr = _verifactu.ObtenerQr(factura);
+
+            if (qr.IsFailure)
+                return BadRequest(qr.Error);
+
+            var mensaje = GenerarMensajeEmail(EditorEmail,factura, qr.Value);
 
             if (mensaje.IsFailure)
             {
@@ -112,9 +123,9 @@ namespace GestionFacturas.Web.Pages.Facturas
             return RedirectToPage(EnviarFacturaPorEmailModelConfirmadoModel.NombrePagina,new { numeroFacturaEnviada = numeroFacturaCodificada } );
         }
 
-        private Result<MensajeEmail> GenerarMensajeEmail(EditorEmail editorEmail, Factura factura)
+        private Result<MensajeEmail> GenerarMensajeEmail(EditorEmail editorEmail, Factura factura, MemoryStream qr)
         {
-            var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, _env.WebRootPath);
+            var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, qr, _env.WebRootPath);
 
             byte[] pdf = informeLocal.Render("PDF");
 

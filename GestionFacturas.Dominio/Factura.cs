@@ -10,7 +10,7 @@ namespace GestionFacturas.Dominio
         {
             Lineas = new List<LineaFactura>();
         }
-        
+
         public int Id { get; set; }
         public string IdUsuario { get; set; } = string.Empty;
 
@@ -18,13 +18,15 @@ namespace GestionFacturas.Dominio
         public int NumeracionFactura { get; set; }
         public string FormatoNumeroFactura { get; set; } = string.Empty;
 
-        public string NumeroFactura { get { return string.Format(FormatoNumeroFactura ?? "", SerieFactura ?? "", NumeracionFactura); } }
-               
+        public string NumeroFactura
+        {
+            get { return string.Format(FormatoNumeroFactura ?? "", SerieFactura ?? "", NumeracionFactura); }
+        }
+
         public DateTime FechaEmisionFactura { get; set; }
         public DateTime? FechaVencimientoFactura { get; set; }
 
-        [Display(Name = "Forma de pago")]
-        public FormaPagoEnum FormaPago { get; set; }
+        [Display(Name = "Forma de pago")] public FormaPagoEnum FormaPago { get; set; }
 
         [Display(Name = "Detalles forma pago")]
         public string FormaPagoDetalles { get; set; } = string.Empty;
@@ -38,7 +40,7 @@ namespace GestionFacturas.Dominio
         public string VendedorCodigoPostal { get; set; } = string.Empty;
         public string? VendedorEmail { get; set; } = string.Empty;
 
-        public string DescripcionPrimeraLinea { get; set; } = string.Empty; 
+        public string DescripcionPrimeraLinea { get; set; } = string.Empty;
 
         public int? IdComprador { get; set; }
         public string CompradorNumeroIdentificacionFiscal { get; set; } = string.Empty;
@@ -51,7 +53,7 @@ namespace GestionFacturas.Dominio
         public string CompradorDireccion1()
             => LineasCompradorDireccion().FirstOrDefault() ?? string.Empty;
 
-        public string CompradorDireccion2() => 
+        public string CompradorDireccion2() =>
             LineasCompradorDireccion().Length > 1 ? LineasCompradorDireccion()[1] : string.Empty;
 
         public string? CompradorLocalidad { get; set; } = string.Empty;
@@ -62,7 +64,7 @@ namespace GestionFacturas.Dominio
 
         public virtual ICollection<LineaFactura> Lineas { get; set; }
         public virtual Usuario Usuario { get; set; } = null!;
-        
+
         public EstadoFacturaEnum EstadoFactura { get; set; }
         public string? Comentarios { get; set; } = string.Empty;
         public string? ComentariosPie { get; set; } = string.Empty;
@@ -72,17 +74,18 @@ namespace GestionFacturas.Dominio
 
         public string? VerifactuCsv { get; set; }
 
-        public bool EnviadaAHacienda { get; set;  }
-        
-        public string NumeroYEmpresaFactura() =>string.Format("Factura {0} {1}", NumeroFactura, CompradorNombreOEmpresa);
-           
+        public bool EnviadaAHacienda { get; set; }
 
-        public decimal BaseImponible()  
+        public string NumeroYEmpresaFactura() =>
+            string.Format("Factura {0} {1}", NumeroFactura, CompradorNombreOEmpresa);
+
+
+        public decimal BaseImponible()
         {
             if (!Lineas.Any()) return 0;
 
             return Lineas.Sum(m => m.PrecioXCantidad);
-           
+
         }
 
         public decimal ImporteImpuestos()
@@ -90,7 +93,7 @@ namespace GestionFacturas.Dominio
             if (!Lineas.Any()) return 0;
 
             return Lineas.Sum(m => m.ImporteImpuesto);
-            
+
         }
 
         public decimal ImporteTotal()
@@ -98,19 +101,19 @@ namespace GestionFacturas.Dominio
             if (!Lineas.Any()) return 0;
 
             return BaseImponible() + ImporteImpuestos();
-            
+
         }
 
         public virtual Cliente Comprador { get; set; } = new();
 
         public Result MarcarFacturaComoEnviadaAHacienda()
         {
-            if(EnviadaAHacienda)
+            if (EnviadaAHacienda)
                 return Result.Failure("Ya se ha enviado a hacienda previamente");
-            
+
             this.EnviadaAHacienda = true;
 
-            if(EstadoFactura == EstadoFacturaEnum.Borrador)
+            if (EstadoFactura == EstadoFacturaEnum.Borrador)
                 this.EstadoFactura = EstadoFacturaEnum.EnviadaAHacienda;
 
             return Result.Success();
@@ -126,6 +129,33 @@ namespace GestionFacturas.Dominio
             this.EstadoFactura = comandoEstado;
             return this;
 
+        }
+
+        public Result ValidarEsPosibleModificar()
+        {
+            return ValidarEsPosibleModificar(EstadoFactura);
+
+        }
+
+        public static Result ValidarEsPosibleModificar(EstadoFacturaEnum estadoFactura)
+        {
+            if (estadoFactura != EstadoFacturaEnum.Borrador)
+                return Result.Failure("Solo es posible modificar una factura en estado Borrador.");
+
+            return Result.Success();
+        }
+
+        public Result ValidarEsPosibleEliminar()
+        {
+            return ValidarEsPosibleEliminar(EstadoFactura);
+        }
+
+        public static Result ValidarEsPosibleEliminar(EstadoFacturaEnum estadoFactura)
+        {
+            if (estadoFactura != EstadoFacturaEnum.Borrador)
+                return Result.Failure("Solo es posible eliminar una factura en estado Borrador.");
+
+            return Result.Success();
         }
     }
 }

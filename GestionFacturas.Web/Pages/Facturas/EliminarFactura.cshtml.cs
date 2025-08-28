@@ -37,16 +37,19 @@ namespace GestionFacturas.Web.Pages.Facturas
             {
                 return Page();
             }
-            
 
-            await EliminarFactura(Editor.Id);
-            return RedirectToPage("/Facturas/EliminarFacturaConfirmado");
-        }
+            var factura = await _db.Facturas
+                    .Include(m => m.Lineas)
+                    .FirstAsync(m => m.Id == Editor.Id);
 
 
-        public async Task<int> EliminarFactura(int idFactura)
-        {
-            var factura = await _db.Facturas.Include(m => m.Lineas).FirstAsync(m => m.Id == idFactura);
+            var validacion = factura.ValidarEsPosibleEliminar();
+
+            if (validacion.IsFailure)
+            {
+                ModelState.AddModelError(string.Empty, validacion.Error);
+                return Page();
+            }
 
             while (factura.Lineas.Any())
             {
@@ -56,7 +59,11 @@ namespace GestionFacturas.Web.Pages.Facturas
 
             _db.Facturas.Remove(factura);
 
-            return await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
+
+            return RedirectToPage("/Facturas/EliminarFacturaConfirmado");
         }
+
+
     }
 }
