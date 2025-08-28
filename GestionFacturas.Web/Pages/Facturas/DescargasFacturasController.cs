@@ -1,12 +1,11 @@
 ﻿using GestionFacturas.Aplicacion;
-using GestionFacturas.Dominio;
 using Microsoft.AspNetCore.Mvc;
 using ClosedXML.Extensions;
 using GestionFacturas.AccesoDatosSql;
 using GestionFacturas.Dominio.Infra;
 using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
-using DocumentFormat.OpenXml.EMMA;
+using CSharpFunctionalExtensions;
 
 namespace GestionFacturas.Web.Pages.Facturas
 {
@@ -56,15 +55,18 @@ namespace GestionFacturas.Web.Pages.Facturas
 
             var archivoZip = await GenerarZip(facturas);
 
+            if (archivoZip.IsFailure)
+                return BadRequest(archivoZip.Error);
+
             var nombreArchivoZip = $"Facturas_desde_{gridParams.Desde}_hasta_{gridParams.Hasta}.zip";
 
-            archivoZip.Position = 0;
+            archivoZip.Value.Position = 0;
             HttpContext.Response.Headers.Append("content-disposition", "attachment; filename=" + nombreArchivoZip);
-            return File(archivoZip, "application/zip");
+            return File(archivoZip.Value, "application/zip");
 
         }
 
-        private async Task<MemoryStream> GenerarZip(IEnumerable<LineaListaGestionFacturas> listaGestionFacturas)
+        private async Task<Result<MemoryStream>> GenerarZip(IEnumerable<LineaListaGestionFacturas> listaGestionFacturas)
         {
             var archivoZip = new MemoryStream();
 
@@ -77,6 +79,9 @@ namespace GestionFacturas.Web.Pages.Facturas
                         .FirstAsync(m => m.Id == itemFactura.Id);
 
                     var qr = _verifactu.ObtenerQr(factura);
+
+                    if (qr.IsFailure)
+                        return qr.ConvertFailure<MemoryStream>();
                     
                     var informeLocal = GeneraLocalReportFactura.GenerarInformeLocalFactura(factura, qr.Value, _env.WebRootPath);
 
