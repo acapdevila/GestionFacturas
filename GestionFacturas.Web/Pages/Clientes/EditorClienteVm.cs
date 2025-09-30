@@ -24,6 +24,7 @@ public class EditorClienteVm
         Email = cliente.Email;
         PersonaContacto = cliente.PersonaContacto;
         ComentarioInterno = cliente.ComentarioInterno;
+        CodigoPaisIso2 = cliente.CodigoPaisIso2;
 
     }
     public int Id { get; set; }
@@ -64,4 +65,7 @@ public class EditorClienteVm
 
     [Display(Name = "Nota interna")]
     public string? ComentarioInterno { get; set; } = string.Empty;
+
+    [Display(Name = "Código país ISO (2)")]
+    public string CodigoPaisIso2 { get; set; } = "es";
 }

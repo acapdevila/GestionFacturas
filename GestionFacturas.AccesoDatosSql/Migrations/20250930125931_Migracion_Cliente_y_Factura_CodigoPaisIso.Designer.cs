@@ -4,6 +4,7 @@ using GestionFacturas.AccesoDatosSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionFacturas.AccesoDatosSql.Migrations
 {
     [DbContext(typeof(SqlDb))]
-    partial class SqlDbModelSnapshot : ModelSnapshot
+    [Migration("20250930125931_Migracion_Cliente_y_Factura_CodigoPaisIso")]
+    partial class Migracion_Cliente_y_Factura_CodigoPaisIso
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

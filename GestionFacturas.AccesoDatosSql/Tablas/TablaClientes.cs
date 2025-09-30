@@ -34,6 +34,8 @@ namespace GestionFacturas.AccesoDatosSql.Tablas
             entity.Property(e => e.PersonaContacto).HasMaxLength(50).IsRequired(false);
 
             entity.Property(e => e.Provincia).HasMaxLength(50);
+
+            entity.Property(e => e.CodigoPaisIso2).HasMaxLength(32);
         }
     }
     

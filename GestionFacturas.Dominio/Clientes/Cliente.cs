@@ -30,6 +30,9 @@ namespace GestionFacturas.Dominio.Clientes
         public string? PersonaContacto { get; set; } 
 
         public string? ComentarioInterno { get; set; }
+        
+      
+        public string CodigoPaisIso2 { get; set; } = string.Empty;
 
         public virtual ICollection<Factura> Facturas { get; set; } = new List<Factura>();
 

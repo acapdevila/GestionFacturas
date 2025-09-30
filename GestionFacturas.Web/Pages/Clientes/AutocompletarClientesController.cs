@@ -40,6 +40,7 @@ namespace GestionFacturas.Web.Pages.Clientes
                     m.Localidad,
                     m.Provincia,
                     m.CodigoPostal,
+                    m.CodigoPaisIso2,
                     m.Email
                 });
 
@@ -65,6 +66,7 @@ namespace GestionFacturas.Web.Pages.Clientes
                         m.Localidad,
                         m.Provincia,
                         m.CodigoPostal,
+                        m.CodigoPaisIso2,
                         m.Email
                     });
 
@@ -90,6 +92,7 @@ namespace GestionFacturas.Web.Pages.Clientes
                         m.Localidad,
                         m.Provincia,
                         m.CodigoPostal,
+                        m.CodigoPaisIso2,
                         m.Email
                     });
 

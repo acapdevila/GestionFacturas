@@ -29,6 +29,7 @@ function completarDatosCliente(ui) {
     $("#Editor_CompradorLocalidad").val(ui.item.Localidad);
     $("#Editor_CompradorProvincia").val(ui.item.Provincia);
     $("#Editor_CompradorCodigoPostal").val(ui.item.CodigoPostal);
+    $("#Editor_CompradorCodigoPaisIso").val(ui.item.CodigoPaisIso2);
     $("#Editor_CompradorEmail").val(ui.item.Email);
 }
 

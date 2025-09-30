@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using VeriFactu.Business;
 using VeriFactu.Config;
 using VeriFactu.Net.Rest;
+using VeriFactu.Xml.Factu;
 using VeriFactu.Xml.Factu.Alta;
 
 namespace GestionFacturas.Aplicacion;
@@ -137,7 +138,7 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
 
     private static Invoice ToIreneSolutionsInvoice(Factura factura)
     {
-        return new Invoice(factura.NumeroFactura,
+        var invoice = new Invoice(factura.NumeroFactura,
             factura.FechaEmisionFactura,
             factura.VendedorNumeroIdentificacionFiscal)
         {
@@ -155,5 +156,13 @@ public class VerifactuIreneSolutionsServicio : IVerifactuServicio
                 TaxAmount = linea.ImporteImpuesto
             }).ToList()
         };
+
+
+        if (!string.IsNullOrEmpty(factura.CompradorCodigoPaisIso2) && factura.CompradorCodigoPaisIso2 != "ES")
+        {
+            invoice.BuyerCountryID = factura.CompradorCodigoPaisIso2;
+            invoice.BuyerIDType = IDType.DOCUMENTO_OFICIAL;
+        }
+        return invoice;
     }
 }

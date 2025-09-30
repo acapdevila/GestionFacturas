@@ -32,6 +32,7 @@ public class EditorFactura
         this.CompradorDireccion2 = factura.CompradorDireccion2();
         this.FechaEmisionFactura = factura.FechaEmisionFactura.ToInputDate();
         this.FechaVencimientoFactura = factura.FechaVencimientoFactura?.ToInputDate();
+        this.CompradorCodigoPaisIso = factura.CompradorCodigoPaisIso2;
     }
 
     public int Id { get; set; }
@@ -138,6 +139,10 @@ public class EditorFactura
     [StringLength(10)]
     public string? CompradorCodigoPostal { get; set; } = string.Empty;
 
+    [Display(Name = "Código país ISO (2)")]
+    [StringLength(2)]
+    public string? CompradorCodigoPaisIso { get; set; } = string.Empty;
+
     [Display(Name = "E-mail")]
     [StringLength(256)]
     public string? CompradorEmail { get; set; } = string.Empty;
@@ -182,6 +187,7 @@ public class EditorFactura
         CompradorNombreOEmpresa = cliente.NombreOEmpresa;
         CompradorNumeroIdentificacionFiscal = cliente.NumeroIdentificacionFiscal;
         CompradorProvincia = cliente.Provincia ?? string.Empty;
+        CompradorCodigoPaisIso = cliente.CodigoPaisIso2;
     }
 
     public static EditorFactura GenerarNuevoEditorFacturaDuplicado(

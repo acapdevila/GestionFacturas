@@ -55,7 +55,7 @@ public class EditarClienteModel : PageModel
         cliente.Email = Editor.Email;
         cliente.PersonaContacto = Editor.PersonaContacto;
         cliente.ComentarioInterno = Editor.ComentarioInterno;
-
+        cliente.CodigoPaisIso2 = Editor.CodigoPaisIso2;
 
         cliente.Direccion = Editor.Direccion1;
         if(!string.IsNullOrEmpty(Editor.Direccion2))

@@ -44,6 +44,8 @@ namespace GestionFacturas.Dominio
 
         public int? IdComprador { get; set; }
         public string CompradorNumeroIdentificacionFiscal { get; set; } = string.Empty;
+
+        public string CompradorCodigoPaisIso2 { get; set; } = string.Empty;
         public string CompradorNombreOEmpresa { get; set; } = string.Empty;
         public string CompradorDireccion { get; set; } = string.Empty;
 

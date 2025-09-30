@@ -72,7 +72,7 @@ namespace GestionFacturas.Web.Pages.Facturas
             
             var resultado = await _verifactu.EnviarAltaFacturaAsync(Id);
 
-            if (!resultado.IsFailure)
+            if (resultado.IsFailure)
             {
                 ModelState.AddModelError(string.Empty, resultado.Error);
                 return Page();

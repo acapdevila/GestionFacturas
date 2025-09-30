@@ -37,6 +37,8 @@ namespace GestionFacturas.AccesoDatosSql.Tablas
 
             entity.Property(e => e.CompradorNumeroIdentificacionFiscal).HasMaxLength(50);
 
+            entity.Property(e => e.CompradorCodigoPaisIso2).HasMaxLength(32);
+
             entity.Property(e => e.CompradorProvincia).HasMaxLength(50);
 
             entity.Property(e => e.FechaEmisionFactura).HasColumnType("datetime");
