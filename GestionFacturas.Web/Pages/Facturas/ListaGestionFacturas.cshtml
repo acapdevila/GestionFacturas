@@ -93,6 +93,7 @@
                     <th scope="col" data-field="@nameof(LineaListaGestionFacturas.CompradorNombreOEmpresa)" data-width="30" data-width-unit="%" data-formatter="clienteFormatter">Cliente</th>
                     <th scope="col" data-field="@nameof(LineaListaGestionFacturas.DescripcionPrimeraLinea)" data-width="70" data-width-unit="%">Descripción</th>
                     <th scope="col" data-field="@nameof(LineaListaGestionFacturas.EstadoFactura)" data-footer-formatter="etiquetaTotalFormatter" data-formatter="estadoFormatter" data-width="50">Estado</th>
+                    <th scope="col" data-field="@nameof(LineaListaGestionFacturas.EnviadaAHacienda)" data-formatter="enviadaAHaciendaFormatter" data-width="50">Hacienda</th>
                     <th scope="col" data-field="@nameof(LineaListaGestionFacturas.BaseImponible)" data-footer-formatter="totalFormatter" data-formatter="priceFormatter" data-width="50">BI</th>
                     <th scope="col" data-field="@nameof(LineaListaGestionFacturas.Impuestos)" data-footer-formatter="totalFormatter" data-formatter="priceFormatter" data-width="50">IVA</th>
                     <th scope="col" data-field="@nameof(LineaListaGestionFacturas.ImporteTotal)" data-footer-formatter="totalFormatter" data-formatter="priceFormatter" data-width="50">Total</th>
@@ -290,6 +291,14 @@
 
         function etiquetaTotalFormatter() {
             return 'Total'
+        }
+
+        function enviadaAHaciendaFormatter(value, row, index) {
+            if (value) {
+                return '<i class="bi bi-check-circle-fill text-success" title="Sí"></i>';
+            } else {
+                return '<i class="bi bi-x-circle-fill text-muted" title="No"></i>';
+            }
         }
 
         function estadoFormatter(value, row, index) {

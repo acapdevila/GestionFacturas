@@ -37,4 +37,6 @@ public class LineaListaGestionFacturas
 
     public EstadoFacturaEnum EstadoFactura { get; set; }
 
+    public bool EnviadaAHacienda { get; set; }
+
 }
