@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using GestionFacturas.Modelos;
@@ -61,7 +62,11 @@ namespace GestionFacturas.Servicios
             if (string.IsNullOrEmpty(texto))
                 return texto;
 
-            return texto.Replace("\r\n", "<br/>").Replace("\n", "<br/>").Replace("\r", "<br/>");
+            // HTML encode the text first to prevent XSS vulnerabilities
+            var textoSeguro = WebUtility.HtmlEncode(texto);
+            
+            // Then replace line breaks with HTML <br/> tags
+            return textoSeguro.Replace("\r\n", "<br/>").Replace("\n", "<br/>").Replace("\r", "<br/>");
         }
 
         private void Validar(MensajeEmail mensaje)
