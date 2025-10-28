@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using GestionFacturas.Modelos;
@@ -42,7 +43,8 @@ namespace GestionFacturas.Servicios
             {
                 Subject = mensaje.Asunto,
                 From = new MailAddress(mensaje.DireccionRemitente, mensaje.NombreRemitente),
-                Body = mensaje.Cuerpo
+                Body = ConvertirSaltosDeLineaAHtml(mensaje.Cuerpo),
+                IsBodyHtml = true
             };
 
            email.ReplyToList.Add(mensaje.DireccionRemitente);
@@ -53,6 +55,18 @@ namespace GestionFacturas.Servicios
             }
 
             return email;
+        }
+
+        private static string ConvertirSaltosDeLineaAHtml(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                return texto;
+
+            // HTML encode the text first to prevent XSS vulnerabilities
+            var textoSeguro = WebUtility.HtmlEncode(texto);
+            
+            // Then replace line breaks with HTML <br/> tags
+            return textoSeguro.Replace("\r\n", "<br/>").Replace("\n", "<br/>").Replace("\r", "<br/>");
         }
 
         private void Validar(MensajeEmail mensaje)
