@@ -1,3 +1,0 @@
-﻿1. Poder personalizar las plantillas de las facturas
-2. Poder seleccionar en número de columnas que aparecen en el Excel
-3. Personalizar el texto por defecto para enviar una factura
