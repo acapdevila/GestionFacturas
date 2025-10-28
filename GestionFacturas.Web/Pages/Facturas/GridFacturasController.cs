@@ -36,6 +36,7 @@ namespace GestionFacturas.Web.Pages.Facturas
                     FechaEmisionFacturaDateTime = m.FechaEmisionFactura,
                     FechaVencimientoFactura = m.FechaVencimientoFactura,
                     EstadoFactura = m.EstadoFactura,
+                    EnviadaAHacienda = m.EnviadaAHacienda,
                     BaseImponible = m.Lineas.Sum(l => (decimal?)(l.PrecioUnitario * l.Cantidad)) ?? 0,
                     Impuestos = m.Lineas.Sum(l => (decimal?)Math.Round((l.PrecioUnitario * l.Cantidad * l.PorcentajeImpuesto / 100), 2)) ?? 0,
                     CompradorNombreOEmpresa = m.CompradorNombreOEmpresa,
