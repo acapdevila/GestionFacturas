@@ -34,10 +34,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(m => m.ContenidoHtml, new { @class = "col-md-2 control-label" })
+    @Html.LabelFor(m => m.ContenidoTexto, new { @class = "col-md-2 control-label" })
                         <div class="col-md-10">
-                            @Html.TextAreaFor(m => m.ContenidoHtml, new { @class = "form-control", rows="10" })
-                            @Html.ValidationMessageFor(m => m.ContenidoHtml, "", new { @class = "text-danger" })
+        @Html.TextAreaFor(m => m.ContenidoTexto, new { @class = "form-control", rows = "10" })
+        @Html.ValidationMessageFor(m => m.ContenidoTexto, "", new { @class = "text-danger" })
                         </div>
                     </div>
 <div class="form-group">

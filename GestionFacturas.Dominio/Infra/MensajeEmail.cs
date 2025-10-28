@@ -1,4 +1,6 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Net.Mime;
+using System.Reflection.Metadata.Ecma335;
+using CSharpFunctionalExtensions;
 
 namespace GestionFacturas.Dominio.Infra
 {
@@ -6,7 +8,7 @@ namespace GestionFacturas.Dominio.Infra
     {
         public static Result<MensajeEmail> Crear(
             string asunto,
-            string cuerpoHtml,
+            string cuerpoTexto,
             IReadOnlyList<DireccionEmail> destinatarios,
             DireccionEmail remitente,
             IReadOnlyList<ArchivoAdjunto> adjuntos)
@@ -14,7 +16,7 @@ namespace GestionFacturas.Dominio.Infra
             if (string.IsNullOrWhiteSpace(asunto))
                 return Result.Failure<MensajeEmail>("El asunto no puede estar vacío");
 
-            if (string.IsNullOrWhiteSpace(cuerpoHtml))
+            if (string.IsNullOrWhiteSpace(cuerpoTexto))
                 return Result.Failure<MensajeEmail>("El cuerpo no puede estar vacío");
 
             if (!destinatarios.Any())
@@ -22,8 +24,8 @@ namespace GestionFacturas.Dominio.Infra
 
             return new MensajeEmail(
                 asunto,
-                HtmlToText(cuerpoHtml),
-                cuerpoHtml,
+                cuerpoTexto,
+                TextoToHtml(cuerpoTexto),
                 destinatarios.Distinct().ToList(),
                 remitente,
                 adjuntos
@@ -68,6 +70,15 @@ namespace GestionFacturas.Dominio.Infra
                 .Replace("<li>", string.Empty)
                 .Replace("<ul>", string.Empty)
                 .Replace("</ul>", Environment.NewLine);
+        }
+
+        private static string TextoToHtml(string texto)
+        {
+            return "<p>" + texto
+                .Replace(Environment.NewLine, "</p><p>")
+                .Replace("</p><p></p><p>", "</p><p>")
+                + "</p>";
+
         }
 
     }

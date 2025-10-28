@@ -26,7 +26,7 @@ public class EditorEmail
     public string Asunto { get; set; } = string.Empty;
 
     [Display(Name = @"Mensaje")]
-    public string ContenidoHtml { get; set; } = string.Empty;
+    public string ContenidoTexto { get; set; } = string.Empty;
 
     public List<SelectListItem> EmailRemitentes { get; set; } = new();
 

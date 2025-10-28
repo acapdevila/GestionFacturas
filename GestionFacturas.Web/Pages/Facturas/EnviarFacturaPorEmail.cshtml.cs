@@ -76,7 +76,7 @@ namespace GestionFacturas.Web.Pages.Facturas
             {
                 Remitente = factura.VendedorEmail ?? string.Empty,
                 Asunto = $"Factura {factura.NumeroFactura} Bahía Code",
-                ContenidoHtml = @"Hola,",
+                ContenidoTexto = @"Hola,",
                 Destinatarios = factura.CompradorEmail ?? string.Empty,
                 DisplayName = factura.VendedorNombreOEmpresa
             };
@@ -193,7 +193,7 @@ namespace GestionFacturas.Web.Pages.Facturas
 
             var mensaje = MensajeEmail.Crear(
                 editorEmail.Asunto,
-                editorEmail.ContenidoHtml,
+                editorEmail.ContenidoTexto,
                 destinatarios,
                 DireccionEmail.Crear(
                     editorEmail.DisplayName,
