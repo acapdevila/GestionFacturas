@@ -111,7 +111,7 @@ namespace GestionFacturas.Dominio
         public Result MarcarFacturaComoEnviadaAHacienda()
         {
             if (EnviadaAHacienda)
-                return Result.Failure($"Ya se ha enviado a hacienda previamente. Factura: {this.NumeroFactura}");
+                return Result.Failure($"Ya se ha enviado a Hacienda previamente. Factura: {this.NumeroFactura}");
 
             this.EnviadaAHacienda = true;
 

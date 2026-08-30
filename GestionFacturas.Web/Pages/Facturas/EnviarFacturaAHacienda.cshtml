@@ -2,11 +2,11 @@
 @model EnviarFacturaAHaciendaModel
 
 @{
-    ViewBag.Title = "Enviar factura a hacienda";
+    ViewBag.Title = "Enviar factura a Hacienda";
 }
 
 <div class="container">
-    <h2>Enviar factura a hacienda @Model.NumeroFactura</h2>
+    <h2>Enviar factura a Hacienda @Model.NumeroFactura</h2>
     <form method="post" enctype="multipart/form-data">
         
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })

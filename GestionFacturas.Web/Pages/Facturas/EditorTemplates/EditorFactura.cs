@@ -171,7 +171,7 @@ public class EditorFactura
     {
         while (Lineas.Any())
         {
-            var linea = Lineas.First();
+            var linea = Lineas[0];
             Lineas.Remove(linea);
         }
     }
@@ -301,7 +301,7 @@ public class EditorFactura
 
     public static void ModificarFactura(EditorFactura editor, Factura factura, SqlDb db)
     {
-        ModificarCabeceraFactura(editor, factura, editor.Lineas.First());
+        ModificarCabeceraFactura(editor, factura, editor.Lineas[0]);
         ModificarLineasFactura(editor.Lineas, factura, db);
     }
 
@@ -309,6 +309,7 @@ public class EditorFactura
     {
         factura.InjectFrom(editor);
 
+        factura.CompradorCodigoPaisIso2 = editor.CompradorCodigoPaisIso ?? string.Empty;
         factura.IdComprador = editor.IdComprador;
         factura.FechaEmisionFactura = editor.FechaEmisionFactura.FromInputToDateTime();
         factura.FechaVencimientoFactura = editor.FechaVencimientoFactura?.FromInputToDateTime();

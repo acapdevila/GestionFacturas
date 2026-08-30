@@ -60,17 +60,17 @@ namespace GestionFacturas.Dominio.Infra
 
         public IReadOnlyList<ArchivoAdjunto> Adjuntos { get; }
 
-        private static string HtmlToText(string html)
-        {
-            return html
-                .Replace("</br>", Environment.NewLine)
-                .Replace("<p>", string.Empty)
-                .Replace("</p>", Environment.NewLine)
-                .Replace("</li>", Environment.NewLine)
-                .Replace("<li>", string.Empty)
-                .Replace("<ul>", string.Empty)
-                .Replace("</ul>", Environment.NewLine);
-        }
+        //private static string HtmlToText(string html)
+        //{
+        //    return html
+        //        .Replace("</br>", Environment.NewLine)
+        //        .Replace("<p>", string.Empty)
+        //        .Replace("</p>", Environment.NewLine)
+        //        .Replace("</li>", Environment.NewLine)
+        //        .Replace("<li>", string.Empty)
+        //        .Replace("<ul>", string.Empty)
+        //        .Replace("</ul>", Environment.NewLine);
+        //}
 
         private static string TextoToHtml(string texto)
         {
